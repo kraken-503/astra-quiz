@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Neon Quiz — Navy &amp; Beige</title>
+
+<!-- Optional: modern system font stack -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --navy-900: #071428;
+  --navy-700: #0b2545;
+  --beige-100: #f7efe2;
+  --beige-200: #efe2c9;
+  --accent: #c9a66b;
+  --muted: #9aa6b2;
+  --glass: rgba(255,255,255,0.04);
+  --success: #2ecc71;
+  --danger: #ff6b6b;
+  --transition: 220ms cubic-bezier(.2,.9,.3,1);
+}
+
+*{box-sizing:border-box}
+html,body{
+  height:100%;
+  margin:0;
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:
+    radial-gradient(1200px 600px at 10% 10%, rgba(201,166,107,0.06), transparent 8%),
+    linear-gradient(180deg, var(--navy-900) 0%, var(--navy-700) 60%);
+  color:var(--beige-100);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px;
+}
+
+/* Card */
+#quiz-container{
+  width:100%;
+  max-width:980px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:18px;
+  padding:28px;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.6), inset 0 1px 0 rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.03);
+  position:relative;
+  overflow:hidden;
+}
+
+/* Top bar */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:18px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.logo {
+  width:56px;
+  height:56px;
+  border-radius:30px;
+  background: linear-gradient(135deg, rgba(201,166,107,0.18), rgba(255,255,255,0.02));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+}
+
+.logo-img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  display:block;
+}
+
+
+.title{
+  font-size:18px;
+  font-weight:600;
+  color:var(--beige-100);
+  letter-spacing:0.2px;
+}
+.subtitle{
+  font-size:13px;
+  color:var(--muted);
+}
+
+/* Counter and timer */
+.meta{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.counter{
+  background:var(--glass);
+  padding:8px 12px;
+  border-radius:999px;
+  font-weight:600;
+  color:var(--beige-100);
+  font-size:14px;
+  border:1px solid rgba(255,255,255,0.03);
+}
+.timer{
+  padding:8px 12px;
+  border-radius:10px;
+  background: linear-gradient(90deg, rgba(201,166,107,0.06), rgba(255,255,255,0.01));
+  color:var(--beige-100);
+  font-weight:600;
+  font-size:14px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(255,255,255,0.03);
+}
+
+/* Question box */
+#question-box{
+  margin:18px auto;
+  width:100%;
+  padding:28px;
+  border-radius:14px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
+  border: 1px solid rgba(201,166,107,0.06);
+  box-shadow: 0 8px 30px rgba(2,6,23,0.45);
+  font-size:20px;
+  font-weight:600;
+  color:var(--beige-100);
+  text-align:left;
+}
+
+/* Options grid */
+.options{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:18px;
+  margin-top:18px;
+}
+.option{
+  padding:18px;
+  border-radius:12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.03);
+  color:var(--beige-100);
+  font-weight:600;
+  cursor:pointer;
+  transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition), background var(--transition);
+  box-shadow: 0 6px 18px rgba(2,6,23,0.45);
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.option:hover{
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(2,6,23,0.6);
+  border-color: rgba(201,166,107,0.18);
+}
+.option .label{
+  min-width:36px;
+  height:36px;
+  border-radius:10px;
+  background: rgba(201,166,107,0.12);
+  color:var(--beige-100);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700;
+  font-size:14px;
+  border:1px solid rgba(201,166,107,0.06);
+}
+
+/* Buttons row */
+.controls{
+  display:flex;
+  gap:12px;
+  margin-top:22px;
+  align-items:center;
+  justify-content:space-between;
+}
+.left-controls{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.btn{
+  padding:12px 18px;
+  border-radius:12px;
+  font-weight:700;
+  cursor:pointer;
+  border:1px solid rgba(255,255,255,0.04);
+  transition: all var(--transition);
+  background: linear-gradient(180deg, rgba(201,166,107,0.06), rgba(255,255,255,0.01));
+  color:var(--beige-100);
+  box-shadow: 0 8px 20px rgba(2,6,23,0.45);
+}
+.btn:active{ transform: translateY(2px) }
+.primary{
+  background: linear-gradient(90deg, var(--accent), rgba(201,166,107,0.9));
+  color:var(--navy-900);
+  border: none;
+  box-shadow: 0 10px 30px rgba(201,166,107,0.12);
+}
+.ghost{
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.04);
+  color:var(--beige-100);
+}
+
+/* Navigation floating buttons */
+.navBtn{
+  position:fixed;
+  bottom:28px;
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:22px;
+  color:var(--navy-900);
+  background:var(--beige-100);
+  box-shadow: 0 12px 30px rgba(2,6,23,0.5);
+  border: none;
+  cursor:pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+#prevBtn{ left:28px; }
+#nextBtn{ right:28px; }
+.navBtn:active{ transform: translateY(2px) }
+
+/* Thank you */
+#thankyou{
+  display:none;
+  text-align:center;
+  padding:40px;
+  color:var(--beige-100);
+}
+#thankyou h1{
+  font-size:34px;
+  margin:0 0 8px 0;
+  letter-spacing:0.2px;
+}
+#thankyou p{
+  color:var(--muted);
+  margin:0;
+}
+
+/* small screens */
+@media (max-width:720px){
+  .options{ grid-template-columns: 1fr; }
+  .header{ flex-direction:column; align-items:flex-start; gap:8px; }
+  .navBtn{ width:48px; height:48px; font-size:20px; bottom:18px; }
+  #prevBtn{ left:16px } #nextBtn{ right:16px }
+}
+</style>
+</head>
+<body>
+
+<div id="quiz-container">
+
+  <div class="header">
+    <div class="brand">
+      <div class="logo"><img src="./astra.png" alt="astra logo" class="logo-img"></div>
+      <div>
+        <div class="title">Quiz</div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <div id="counter" class="counter">Question 1 / 15</div>
+      <div id="timer" class="timer">Time Left: 30s</div>
+    </div>
+  </div>
+
+  <div id="question-box">Question text will appear here</div>
+
+  <div class="options">
+    <div class="option" id="opt0"><div class="label">A</div><div class="text" id="opt0txt"></div></div>
+    <div class="option" id="opt1"><div class="label">B</div><div class="text" id="opt1txt"></div></div>
+    <div class="option" id="opt2"><div class="label">C</div><div class="text" id="opt2txt"></div></div>
+    <div class="option" id="opt3"><div class="label">D</div><div class="text" id="opt3txt"></div></div>
+  </div>
+
+  <div class="controls">
+    <div class="left-controls">
+      <button id="answerBtn" class="btn primary" onclick="showAnswer()">Reveal Answer</button>
+      <button id="skipBtn" class="btn ghost" onclick="nextQuestion()">Skip</button>
+    </div>
+
+    <div>
+      <div style="font-size:13px;color:var(--muted);">Tip: Hover options to preview</div>
+    </div>
+  </div>
+
+</div>
+
+<button id="prevBtn" class="navBtn" onclick="prevQuestion()">◀</button>
+<button id="nextBtn" class="navBtn" onclick="nextQuestion()">▶</button>
+
+<div id="thankyou">
+  <h1>Thank You For Participating!</h1>
+  <p>Hope you enjoyed the quiz — come back for more.</p>
+</div>
+
+<script>
+/* Questions data */
+let questions = [
+{question:"1. Which country has the most number of islands?", options:["Europe","Brazil","India","Sweden"], answer:3},
+{question:"2. What is the part of a search engine that does the searching for websites?", options:["Spiders","Ants","Indexers","Crawlers"], answer:3},
+{question:"3. Which company’s famous advertisement was inspired by the novel Nineteen Eighty-Four?", options:["Pepsi","Coca-Cola","Nokia","Apple Inc."], answer:3},
+{question:"4. Who is the founder of MySpace?", options:["Mark Zuckerberg","Tom Anderson","Bill Gates","Steve Jobs"], answer:1},
+{question:"5. How long is an IPv6 address?", options:["64 bit","32 bit","128 bit","256 bit"], answer:2},
+{question:"6. Which programming language is mainly used for scientific calculations?", options:["C","Python","Fortran","Java"], answer:2},
+{question:"7. Where are the headquarters of Google located?", options:["Arlington","Redmond","Washington","Mountain View"], answer:3},
+{question:"8. Which vitamin deficiency causes Pellagra?", options:["Vitamin B1","Vitamin B3","Vitamin C","Vitamin D"], answer:1},
+{question:"9. In which year was GST inaugurated in India?", options:["2015","2016","2017","2018"], answer:2},
+{question:"10. Which of these is NOT an ISO standard document format?", options:["OOXML","TIFF","PDF","Word"], answer:3},
+{question:"11. Which cable is commonly used to connect a hard drive to a motherboard?", options:["SATA cable","IDE cable","USB cable","PS2 cable"], answer:0},
+{question:"12. What does ICMP stand for?", options:["Internet Connect Management Protocol","Internet Cloud Message Protocol","Internet Control Message Protocol","Internal Communication Method Protocol"], answer:2},
+{question:"13. Which word is synonymous with 'Bookmark'?", options:["Page","Favorite","Firewall","Token"], answer:1},
+{question:"14. Which of the following terms describes good manners on the internet?", options:["Netizen","Netiquette","Net neutrality","Network topology"], answer:1},
+{question:"15. Which part of a database holds only one type of information?", options:["Report","Field","Record","File"], answer:1}
+];
+
+let currentQuestion = 0;
+let timeLeft = 30;
+let timer = null;
+const total = questions.length;
+
+/* Utility to set accessible colors */
+function setOptionStyle(el, state){
+  // reset
+  el.style.background = '';
+  el.style.borderColor = '';
+  el.style.boxShadow = '';
+  el.style.color = '';
+  el.style.opacity = '1';
+
+  if(state === 'correct'){
+    el.style.background = 'linear-gradient(90deg, rgba(46,204,113,0.12), rgba(46,204,113,0.06))';
+    el.style.borderColor = 'rgba(46,204,113,0.18)';
+    el.style.boxShadow = '0 12px 30px rgba(46,204,113,0.06)';
+    el.style.color = 'var(--beige-100)';
+  } else if(state === 'wrong'){
+    el.style.background = 'linear-gradient(90deg, rgba(255,107,107,0.08), rgba(255,107,107,0.03))';
+    el.style.borderColor = 'rgba(255,107,107,0.12)';
+    el.style.boxShadow = '0 12px 30px rgba(255,107,107,0.04)';
+    el.style.color = 'var(--beige-100)';
+    el.style.opacity = '0.9';
+  } else {
+    // neutral
+    el.style.background = '';
+    el.style.borderColor = '';
+    el.style.boxShadow = '';
+    el.style.color = '';
+    el.style.opacity = '1';
+  }
+}
+
+/* Timer functions */
+function startTimer(){
+  clearInterval(timer);
+  timeLeft = 30;
+  updateTimerDisplay();
+  timer = setInterval(()=>{
+    timeLeft--;
+    updateTimerDisplay();
+    if(timeLeft <= 0){
+      clearInterval(timer);
+      // auto-show correct answer when time runs out
+      showAnswer();
+    }
+  },1000);
+}
+
+function updateTimerDisplay(){
+  const timerEl = document.getElementById('timer');
+  timerEl.innerText = 'Time Left: ' + timeLeft + 's';
+  if(timeLeft <= 5){
+    timerEl.style.color = 'var(--danger)';
+  } else if(timeLeft <= 12){
+    timerEl.style.color = 'var(--accent)';
+  } else {
+    timerEl.style.color = 'var(--beige-100)';
+  }
+}
+
+/* Load question */
+function loadQuestion(){
+  // reset option styles
+  for(let i=0;i<4;i++){
+    const opt = document.getElementById('opt'+i);
+    setOptionStyle(opt, 'neutral');
+  }
+
+  const q = questions[currentQuestion];
+  document.getElementById('counter').innerText = 'Question ' + (currentQuestion+1) + ' / ' + total;
+  document.getElementById('question-box').innerText = q.question;
+
+  for(let i=0;i<4;i++){
+    document.getElementById('opt'+i+'txt').innerText = q.options[i];
+  }
+
+  startTimer();
+}
+
+/* Reveal correct answer */
+function showAnswer(){
+  clearInterval(timer);
+  const correctIndex = questions[currentQuestion].answer;
+  for(let i=0;i<4;i++){
+    const el = document.getElementById('opt'+i);
+    if(i === correctIndex){
+      setOptionStyle(el, 'correct');
+    } else {
+      setOptionStyle(el, 'wrong');
+    }
+  }
+}
+
+/* Navigation */
+function nextQuestion(){
+  if(currentQuestion < questions.length - 1){
+    currentQuestion++;
+    loadQuestion();
+  } else {
+    document.getElementById('quiz-container').style.display = 'none';
+    document.getElementById('thankyou').style.display = 'block';
+    clearInterval(timer);
+  }
+}
+
+function prevQuestion(){
+  if(currentQuestion > 0){
+    currentQuestion--;
+    loadQuestion();
+  }
+}
+
+/* Option click: reveal answer if clicked */
+for(let i=0;i<4;i++){
+  (function(idx){
+    const el = document.getElementById('opt'+idx);
+    el.addEventListener('click', ()=>{
+      // small animation to indicate selection
+      el.style.transform = 'translateY(-4px)';
+      setTimeout(()=> el.style.transform = '', 180);
+      // reveal correct answer
+      showAnswer();
+    });
+  })(i);
+}
+
+/* Initialize */
+loadQuestion();
+</script>
+
+</body>
+</html>
+

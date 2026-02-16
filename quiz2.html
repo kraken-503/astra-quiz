@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Neon Quiz — Round 2 Visual</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-900: #071428;
+  --navy-700: #0b2545;
+  --beige-100: #f7efe2;
+  --beige-200: #efe2c9;
+  --accent: #c9a66b;
+  --muted: #9aa6b2;
+  --glass: rgba(255,255,255,0.04);
+  --success: #2ecc71;
+  --danger: #ff6b6b;
+  --transition: 220ms cubic-bezier(.2,.9,.3,1);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:
+  radial-gradient(1200px 600px at 10% 10%, rgba(201,166,107,0.06), transparent 8%),
+  linear-gradient(180deg, var(--navy-900) 0%, var(--navy-700) 60%);color:var(--beige-100);display:flex;align-items:center;justify-content:center;padding:28px;}
+
+.container{
+  width:100%;
+  max-width:980px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:18px;padding:22px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 30px rgba(2,6,23,0.6);
+}
+
+/* header */
+.header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg, rgba(201,166,107,0.18), rgba(255,255,255,0.02));display:flex;align-items:center;justify-content:center;color:var(--beige-100);font-weight:700;font-size:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 6px 18px rgba(2,6,23,0.6);overflow:hidden}
+.logo img{width:70%;height:70%;object-fit:contain;display:block}
+.title{font-size:18px;font-weight:600}
+.subtitle{font-size:13px;color:var(--muted)}
+
+/* meta */
+.meta{display:flex;gap:12px;align-items:center}
+.counter{background:var(--glass);padding:8px 12px;border-radius:999px;font-weight:600;color:var(--beige-100);font-size:14px;border:1px solid rgba(255,255,255,0.03)}
+.timer{padding:8px 12px;border-radius:10px;background:linear-gradient(90deg, rgba(201,166,107,0.06), rgba(255,255,255,0.01));color:var(--beige-100);font-weight:600;font-size:14px;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.03)}
+
+/* visual area */
+.visual{
+  margin-top:12px;
+  display:grid;
+  grid-template-columns: 1fr 360px;
+  gap:18px;
+}
+@media (max-width:920px){ .visual{ grid-template-columns: 1fr; } }
+
+.image-card{
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+  border-radius:14px;padding:14px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 30px rgba(2,6,23,0.45);
+  display:flex;align-items:center;justify-content:center;min-height:360px;position:relative;overflow:hidden;
+}
+.image-card img{max-width:100%;max-height:100%;border-radius:10px;object-fit:contain;}
+
+/* controls panel */
+.panel{
+  background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
+  border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 30px rgba(2,6,23,0.35);
+  display:flex;flex-direction:column;gap:12px;height:100%;
+}
+.hint{font-size:13px;color:var(--muted)}
+.btn{padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,0.04);transition:all var(--transition);background:linear-gradient(180deg, rgba(201,166,107,0.06), rgba(255,255,255,0.01));color:var(--beige-100)}
+.btn.primary{background:linear-gradient(90deg,var(--accent),rgba(201,166,107,0.9));color:var(--navy-900);border:none;box-shadow:0 10px 30px rgba(201,166,107,0.12)}
+.small{padding:8px 10px;font-size:13px}
+
+/* progress & results */
+.logo {
+  width:56px;
+  height:56px;
+  border-radius:30px;
+  background: linear-gradient(135deg, rgba(201,166,107,0.18), rgba(255,255,255,0.02));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+}
+
+.logo-img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  display:block;
+}
+
+.progress{display:flex;align-items:center;gap:10px;margin-top:6px}
+.progress-bar{flex:1;height:10px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),rgba(201,166,107,0.9));width:0%}
+.score{font-weight:700;color:var(--beige-100)}
+
+/* overlay correct/wrong */
+.overlay{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:var(--beige-100);
+  background:linear-gradient(180deg, rgba(2,6,23,0.45), rgba(2,6,23,0.55));backdrop-filter: blur(2px);opacity:0;pointer-events:none;transition:opacity 220ms;
+}
+.overlay.show{opacity:1;pointer-events:auto}
+.overlay.correct{color:var(--success)}
+.overlay.wrong{color:var(--danger)}
+
+/* final screen */
+.final{
+  display:none;padding:28px;text-align:center;
+  width:100%;
+  max-width:980px;
+  margin-top:18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:18px;padding:22px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 10px 30px rgba(2,6,23,0.6);
+}
+.final h2{margin:0 0 8px 0}
+.final p{color:var(--muted)}
+
+/* small screens */
+@media (max-width:520px){
+  .panel{padding:12px}
+  .image-card{min-height:260px}
+}
+</style>
+</head>
+<body>
+
+<!-- Main quiz container -->
+<div style="display:flex;flex-direction:column;align-items:center;gap:18px;width:100%;">
+  <div class="container" id="round2">
+    <div class="header">
+      <div class="brand">
+        <div class="logo" id="logoBox">
+          <!-- Replace the img src with your logo file or keep NQ text -->
+          <img src="./img/astra.png" alt="Neon Quiz logo" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='flex'">
+          <div id="logoFallback" style="display:none;align-items:center;justify-content:center;width:100%;height:100%;font-weight:700;">NQ</div>
+        </div>
+        <div>
+          <div class="title">Quiz — Visual Round</div>
+          <div class="subtitle">Round 2: Identify the images</div>
+        </div>
+      </div>
+
+      <div class="meta">
+        <div id="counter" class="counter">Image 1 / 10</div>
+        <div id="timer" class="timer">Time Left: 30s</div>
+      </div>
+    </div>
+
+    <div class="visual">
+      <div class="image-card" id="imageCard">
+        <img id="visualImg" src="img/1.jpg" alt="Visual question 1">
+        <div class="overlay" id="overlay"></div>
+      </div>
+
+      <div class="panel">
+        <div class="hint">This round shows images only. Use Reveal to see the correct answer, or Skip/Next to move on.</div>
+
+        <!-- INPUT removed as requested -->
+
+        <div style="display:flex;gap:8px;align-items:center;justify-content:space-between">
+          <div style="display:flex;gap:8px">
+            <button id="prevBtn" class="btn small">Previous</button>
+            <button id="nextBtn" class="btn small">Next</button>
+            <button id="revealBtn" class="btn small">Reveal</button>
+          </div>
+          <div style="text-align:right">
+            <div class="score">Score: <span id="score">0</span> / 10</div>
+            <div style="font-size:12px;color:var(--muted)">Correct: <span id="correctCount">0</span></div>
+          </div>
+        </div>
+
+        <div class="progress" aria-hidden="true">
+          <div style="font-size:13px;color:var(--muted)">Progress</div>
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <div style="margin-top:auto;display:flex;gap:8px;justify-content:space-between;align-items:center">
+          <div style="font-size:13px;color:var(--muted)">Images stored in <strong>img/</strong></div>
+          <div style="display:flex;gap:8px">
+            <button id="skipBtn" class="btn">Skip</button>
+            <button id="endBtn" class="btn">End Round</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL SCREEN moved outside the #round2 container so it won't be hidden when round2 is hidden -->
+  <div class="final" id="finalScreen" aria-live="polite">
+    <h2>Round 2 Complete</h2>
+    <p id="finalSummary">You scored 0 / 10</p>
+    <div style="margin-top:18px;display:flex;gap:10px;justify-content:center">
+      <button id="restartBtn" class="btn primary">Play Again</button>
+      <button id="backBtn" class="btn">Back to Lobby</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Configuration: list images and their correct answers (canonical forms) */
+const visualItems = [
+  {src:'./img/alan_turing.jpg', answer:'alan turing'},
+  {src:'./img/chanel.jpeg', answer:'chanel'},
+  {src:'./img/dropbox.png', answer:'dropbox'},
+  {src:'./img/kalyan_krishnamurthy.jpg', answer:'kalyan krishnamurthy'},
+  {src:'./img/lmms.png', answer:'lmms'},
+  {src:'./img/michelin.png', answer:'michelin'},
+  {src:'./img/nalanda_university.jpg', answer:'nalanda university'},
+  {src:'./img/Stalin.jpg', answer:'stalin'},
+  {src:'./img/terry_a_davis.jpg', answer:'terry a davis'},
+  {src:'./img/tim_berners_lee.jpg', answer:'tim berners lee'}
+];
+
+let current = 0;
+let score = 0;
+let correctCount = 0;
+let timeLeft = 30;
+let timer = null;
+const total = visualItems.length;
+
+/* DOM refs (note: guessInput and submitBtn removed) */
+const visualImg = document.getElementById('visualImg');
+const counterEl = document.getElementById('counter');
+const timerEl = document.getElementById('timer');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const revealBtn = document.getElementById('revealBtn');
+const skipBtn = document.getElementById('skipBtn');
+const endBtn = document.getElementById('endBtn');
+const overlay = document.getElementById('overlay');
+const scoreEl = document.getElementById('score');
+const correctEl = document.getElementById('correctCount');
+const progressFill = document.getElementById('progressFill');
+const finalScreen = document.getElementById('finalScreen');
+const finalSummary = document.getElementById('finalSummary');
+const restartBtn = document.getElementById('restartBtn');
+const backBtn = document.getElementById('backBtn');
+
+/* State to remember which items were revealed/answered */
+const state = visualItems.map(()=>({revealed:false, correct:false}));
+
+/* Helpers */
+function loadItem(index){
+  current = index;
+  const item = visualItems[current];
+  visualImg.src = item.src;
+  visualImg.alt = 'Visual question ' + (current+1);
+  counterEl.innerText = 'Image ' + (current+1) + ' / ' + total;
+  overlay.className = 'overlay';
+  overlay.innerText = '';
+  updateProgress();
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(timer);
+  timeLeft = 30;
+  updateTimer();
+  timer = setInterval(()=>{
+    timeLeft--;
+    updateTimer();
+    if(timeLeft <= 0){
+      clearInterval(timer);
+      // auto reveal when time runs out
+      revealAnswer();
+    }
+  },1000);
+}
+
+function updateTimer(){
+  timerEl.innerText = 'Time Left: ' + timeLeft + 's';
+  if(timeLeft <= 5) timerEl.style.color = 'var(--danger)';
+  else if(timeLeft <= 12) timerEl.style.color = 'var(--accent)';
+  else timerEl.style.color = 'var(--beige-100)';
+}
+
+function normalize(s){
+  return (s||'').trim().toLowerCase().replace(/\s+/g,' ');
+}
+
+/* Since there's no input, revealAnswer simply shows the canonical answer.
+   If you later want to accept guesses via other means (e.g., host input),
+   you can compare and update score accordingly. */
+function revealAnswer(){
+  if(overlay.classList.contains('show')) return;
+  clearInterval(timer);
+  const correctAnswer = visualItems[current].answer || '(no answer set)';
+  state[current].revealed = true;
+  // mark as not-correct by default; scoring requires a guess mechanism
+  state[current].correct = false;
+  showOverlay('Answer: ' + correctAnswer, 'wrong');
+  updateScoreUI();
+  // auto-advance after short delay
+  setTimeout(()=> {
+    if(current < total - 1) loadItem(current + 1);
+    else endRound();
+  }, 1400);
+}
+
+function showOverlay(text, cls){
+  overlay.innerText = text;
+  overlay.className = 'overlay show ' + (cls || '');
+}
+
+function updateScoreUI(){
+  scoreEl.innerText = score;
+  correctEl.innerText = correctCount;
+  const pct = Math.round(((current+1)/total)*100);
+  progressFill.style.width = pct + '%';
+}
+
+function nextItem(){
+  clearInterval(timer);
+  if(current < total - 1){
+    loadItem(current + 1);
+  } else {
+    endRound();
+  }
+}
+
+function prevItem(){
+  clearInterval(timer);
+  if(current > 0) loadItem(current - 1);
+}
+
+function skipItem(){
+  if(overlay.classList.contains('show')) return;
+  clearInterval(timer);
+  state[current].revealed = true;
+  state[current].correct = false;
+  showOverlay('Skipped', 'wrong');
+  updateScoreUI();
+  setTimeout(()=> {
+    if(current < total - 1) loadItem(current + 1);
+    else endRound();
+  }, 900);
+}
+
+function endRound(){
+  clearInterval(timer);
+  document.getElementById('round2').style.display = 'none';
+  finalScreen.style.display = 'block';
+  finalSummary.innerText = 'You scored ' + score + ' / ' + total + '. Correct answers: ' + correctCount + '.';
+}
+
+/* Event bindings */
+revealBtn.addEventListener('click', revealAnswer);
+nextBtn.addEventListener('click', nextItem);
+prevBtn.addEventListener('click', prevItem);
+skipBtn.addEventListener('click', skipItem);
+endBtn.addEventListener('click', endRound);
+restartBtn.addEventListener('click', ()=>{
+  for(let i=0;i<state.length;i++){ state[i].revealed=false; state[i].correct=false; }
+  score = 0; correctCount = 0;
+  finalScreen.style.display = 'none';
+  document.getElementById('round2').style.display = 'block';
+  loadItem(0);
+  updateScoreUI();
+});
+backBtn.addEventListener('click', ()=> location.reload());
+
+/* preload images for smoother transitions */
+visualItems.forEach(it=>{
+  const img = new Image();
+  img.src = it.src;
+});
+
+/* Initialize */
+loadItem(0);
+updateScoreUI();
+</script>
+
+</body>
+</html>

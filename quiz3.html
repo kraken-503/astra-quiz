@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Neon Quiz — Round 3 Quickfire</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy-900: #071428;
+  --navy-700: #0b2545;
+  --beige-100: #f7efe2;
+  --beige-200: #efe2c9;
+  --accent: #c9a66b;
+  --muted: #9aa6b2;
+  --glass: rgba(255,255,255,0.04);
+  --success: #2ecc71;
+  --danger: #ff6b6b;
+  --transition: 220ms cubic-bezier(.2,.9,.3,1);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial;background:
+  radial-gradient(1200px 600px at 10% 10%, rgba(201,166,107,0.06), transparent 8%),
+  linear-gradient(180deg, var(--navy-900) 0%, var(--navy-700) 60%);color:var(--beige-100);display:flex;align-items:center;justify-content:center;padding:28px;}
+
+.wrapper{
+  width:100%;
+  max-width:820px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+  align-items:center;
+}
+
+.logo {
+  width:56px;
+  height:56px;
+  border-radius:30px;
+  background: linear-gradient(135deg, rgba(201,166,107,0.18), rgba(255,255,255,0.02));
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.04);
+  box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+}
+
+.logo-img {
+  width: 70%;
+  height: 70%;
+  object-fit: contain;
+  display:block;
+}
+
+/* Card */
+.card{
+  width:100%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:16px;
+  padding:20px;
+  border:1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 12px 36px rgba(2,6,23,0.6);
+}
+
+/* Header */
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:12px;
+}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:56px;height:56px;border-radius:12px;
+  background:linear-gradient(135deg, rgba(201,166,107,0.18), rgba(255,255,255,0.02));
+  display:flex;align-items:center;justify-content:center;color:var(--beige-100);
+  font-weight:700;font-size:18px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 6px 18px rgba(2,6,23,0.6);overflow:hidden;
+}
+.title{font-size:18px;font-weight:700}
+.subtitle{font-size:13px;color:var(--muted)}
+
+/* Question area */
+.question-box{
+  padding:18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+  border:1px solid rgba(255,255,255,0.03);box-shadow:0 8px 24px rgba(2,6,23,0.35);
+  font-size:18px;font-weight:600;color:var(--beige-100);
+  min-height:120px;display:flex;align-items:center;
+}
+
+/* Controls */
+.controls{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-top:14px;
+}
+.left-controls{display:flex;gap:8px;align-items:center}
+.btn{
+  padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,0.04);
+  transition:all var(--transition);background:linear-gradient(180deg, rgba(201,166,107,0.06), rgba(255,255,255,0.01));color:var(--beige-100)
+}
+.btn.primary{background:linear-gradient(90deg,var(--accent),rgba(201,166,107,0.9));color:var(--navy-900);border:none;box-shadow:0 10px 30px rgba(201,166,107,0.12)}
+.small{padding:8px 10px;font-size:13px}
+
+/* Meta */
+.meta{display:flex;gap:12px;align-items:center}
+.counter{background:var(--glass);padding:8px 12px;border-radius:999px;font-weight:700;color:var(--beige-100);font-size:14px;border:1px solid rgba(255,255,255,0.03)}
+.timer{padding:8px 12px;border-radius:10px;background:linear-gradient(90deg, rgba(201,166,107,0.06), rgba(255,255,255,0.01));color:var(--beige-100);font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,0.03)}
+
+/* Reveal area */
+.reveal{
+  margin-top:12px;
+  padding:12px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.03);
+  color:var(--beige-100);font-weight:700;min-height:48px;display:flex;align-items:center;justify-content:center;
+}
+
+/* Progress */
+.progress{display:flex;align-items:center;gap:10px;margin-top:10px}
+.progress-bar{flex:1;height:10px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),rgba(201,166,107,0.9));width:0%}
+
+/* Final screen */
+.final{
+  display:none;
+  width:100%;
+  max-width:820px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:16px;padding:22px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 36px rgba(2,6,23,0.6);
+  text-align:center;color:var(--beige-100);
+}
+.final h2{margin:0 0 8px 0}
+.final p{color:var(--muted)}
+
+/* small screens */
+@media (max-width:640px){
+  .visual-grid{flex-direction:column}
+  .controls{flex-direction:column;align-items:stretch}
+  .left-controls{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+
+  <div class="card" id="round3">
+    <div class="header">
+      <div class="brand">
+      <div class="logo"><img src="./img/astra.png" alt="astra logo" class="logo-img"></div>
+        <div>
+          <div class="title">Quiz — Round 3</div>
+          <div class="subtitle">Quickfire — 5 questions</div>
+        </div>
+      </div>
+
+      <div class="meta">
+        <div id="counter" class="counter">Q 1 / 5</div>
+        <div id="timer" class="timer">Time Left: 20s</div>
+      </div>
+    </div>
+
+    <div id="questionBox" class="question-box">Question text will appear here</div>
+
+    <div class="reveal" id="revealArea">Answers will be revealed here</div>
+
+    <div class="controls">
+      <div class="left-controls">
+        <button id="prevBtn" class="btn small">Previous</button>
+        <button id="revealBtn" class="btn">Reveal Answer</button>
+        <button id="nextBtn" class="btn small">Next</button>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+        <div style="font-weight:700;color:var(--beige-100)">Host controls</div>
+        <div style="display:flex;gap:8px">
+          <button id="skipBtn" class="btn">Skip</button>
+          <button id="endBtn" class="btn">End Round</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="progress" aria-hidden="true">
+      <div style="font-size:13px;color:var(--muted)">Progress</div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+  </div>
+
+  <div class="final" id="finalScreen" aria-live="polite">
+    <h2>Round 3 Complete</h2>
+    <p id="finalSummary">You completed Round 3.</p>
+    <div style="margin-top:18px;display:flex;gap:10px;justify-content:center">
+      <button id="restartBtn" class="btn primary">Play Again</button>
+      <button id="backBtn" class="btn">Back to Lobby</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* Round 3: 5 questions with reveal area. Theme matches previous rounds. */
+const round3Items = [
+  { q: "1. Which river in India does not flow into the sea?", a: "The Yamuna (it is a tributary of the Ganga and does not directly flow into the sea)" },
+  { q: "2. The PODA project of Kerala Government is related to which issue?", a: "PODA is related to waste management and decentralised organic waste processing (community composting initiatives)" },
+  { q: "3. Which standard ensures interoperability between ECM systems?", a: "CMIS (Content Management Interoperability Services) ensures interoperability between ECM systems" },
+  { q: "4. In which country was the 2025 ICC World Test Championship final held?", a: "The 2025 ICC World Test Championship final was held in England" },
+  { q: "5. In which year was IUPAC officially formed?", a: "IUPAC was officially formed in 1919" }
+];
+
+/* Config */
+let current = 0;
+let timeLeft = 60;
+let timer = null;
+const total = round3Items.length;
+
+/* DOM refs */
+const questionBox = document.getElementById('questionBox');
+const revealArea = document.getElementById('revealArea');
+const counterEl = document.getElementById('counter');
+const timerEl = document.getElementById('timer');
+const progressFill = document.getElementById('progressFill');
+const finalScreen = document.getElementById('finalScreen');
+const finalSummary = document.getElementById('finalSummary');
+
+/* Buttons */
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const revealBtn = document.getElementById('revealBtn');
+const skipBtn = document.getElementById('skipBtn');
+const endBtn = document.getElementById('endBtn');
+const restartBtn = document.getElementById('restartBtn');
+const backBtn = document.getElementById('backBtn');
+
+/* State to track reveals */
+const state = round3Items.map(()=>({revealed:false, skipped:false}));
+
+/* Helpers */
+function loadQuestion(index){
+  current = index;
+  const item = round3Items[current];
+  questionBox.innerText = item.q;
+  counterEl.innerText = `Q ${current+1} / ${total}`;
+  revealArea.innerText = state[current].revealed ? `Answer: ${round3Items[current].a}` : 'Answers will be revealed here';
+  updateProgress();
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(timer);
+  timeLeft = 60;
+  updateTimer();
+  timer = setInterval(()=>{
+    timeLeft--;
+    updateTimer();
+    if(timeLeft <= 0){
+      clearInterval(timer);
+      // auto reveal when time runs out
+      revealAnswer();
+    }
+  },1000);
+}
+
+function updateTimer(){
+  timerEl.innerText = `Time Left: ${timeLeft}s`;
+  if(timeLeft <= 5) timerEl.style.color = 'var(--danger)';
+  else if(timeLeft <= 12) timerEl.style.color = 'var(--accent)';
+  else timerEl.style.color = 'var(--beige-100)';
+}
+
+function revealAnswer(){
+  if(state[current].revealed) return;
+  clearInterval(timer);
+  state[current].revealed = true;
+  revealArea.innerText = `Answer: ${round3Items[current].a}`;
+  // small delay then auto-advance so host can read
+  setTimeout(()=> {
+    if(current < total - 1) loadQuestion(current + 1);
+    else endRound();
+  }, 1400);
+}
+
+function nextQuestion(){
+  clearInterval(timer);
+  if(current < total - 1) loadQuestion(current + 1);
+  else endRound();
+}
+
+function prevQuestion(){
+  clearInterval(timer);
+  if(current > 0) loadQuestion(current - 1);
+}
+
+function skipQuestion(){
+  if(state[current].revealed) return;
+  clearInterval(timer);
+  state[current].skipped = true;
+  revealArea.innerText = 'Skipped';
+  setTimeout(()=> {
+    if(current < total - 1) loadQuestion(current + 1);
+    else endRound();
+  }, 900);
+}
+
+function updateProgress(){
+  const pct = Math.round(((current+1)/total)*100);
+  progressFill.style.width = pct + '%';
+}
+
+function endRound(){
+  clearInterval(timer);
+  document.getElementById('round3').style.display = 'none';
+  finalScreen.style.display = 'block';
+  // Build a short summary listing which questions were revealed/skipped
+  const revealedCount = state.filter(s=>s.revealed).length;
+  const skippedCount = state.filter(s=>s.skipped).length;
+  finalSummary.innerText = `Revealed: ${revealedCount} / ${total}. Skipped: ${skippedCount}.`;
+}
+
+/* Event bindings */
+revealBtn.addEventListener('click', revealAnswer);
+nextBtn.addEventListener('click', nextQuestion);
+prevBtn.addEventListener('click', prevQuestion);
+skipBtn.addEventListener('click', skipQuestion);
+endBtn.addEventListener('click', endRound);
+restartBtn.addEventListener('click', ()=>{
+  // reset
+  for(let i=0;i<state.length;i++){ state[i].revealed=false; state[i].skipped=false; }
+  current = 0;
+  document.getElementById('round3').style.display = 'block';
+  finalScreen.style.display = 'none';
+  loadQuestion(0);
+});
+backBtn.addEventListener('click', ()=> location.reload());
+
+/* Initialize */
+loadQuestion(0);
+</script>
+
+</body>
+</html>
+
